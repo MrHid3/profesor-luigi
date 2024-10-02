@@ -1,0 +1,16 @@
+*{
+    box-sizing: border-box;
+}
+
+#pf{
+    width: 240px;
+    margin: 0 auto;
+}
+
+.piece{
+    border: solid 1px;
+    width: 30px;
+    height: 30px;
+    float: left;
+    color: brown;
+}
