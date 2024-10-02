@@ -166,8 +166,8 @@ class Game{
                     } 
                     if (counter >= 3){
                         for (let k = 0; k <= counter; k++){
-                            this.playingField[i][j - k - 1] = null;
-                            cont.children[i].children[j - k - 1].style.backgroundColor = "transparent";
+                            this.playingField[i][j - k] = null;
+                            cont.children[i].children[j - k].style.backgroundColor = "transparent";
                         }
                     }
                 }else counter = 0;
