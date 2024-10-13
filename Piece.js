@@ -65,7 +65,7 @@ export class Piece {
                             this.rotationy = -1;
                             break;
                         case 1: // na lewo
-                            if(this.x != 0){
+                            if(this.x != 7){
                                 this.rotation = 2;
                                 this.rotationx = -1;
                                 this.rotationy = 0;
@@ -89,10 +89,8 @@ export class Piece {
                             }
                             break;
                     }
-
                 }
             }})
-        return new Promise((resolve) => {
             setInterval(() => {
                 if(falling){
                     if(this.y == 15 ||
@@ -108,7 +106,8 @@ export class Piece {
                         this.game.playingField[this.y + this.rotationy][this.x + this.rotationx] = this.color2;
                         // this.starDestroyer()                                                                 NIGGA STAR DESTROYER
                         // console.log("koniec")
-                        resolve(1)
+                        let nowy = new Piece(this.id + 1, "yellow", "red", this.nameOfContainer, this.game);
+                        nowy.ltg();
                     }else{
                         this.erasePiece();
                         this.y += 1;
@@ -121,7 +120,6 @@ export class Piece {
                     }
                 }
             }, 200)
-        })
 
     }
 }

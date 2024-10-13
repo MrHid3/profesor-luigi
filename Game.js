@@ -9,15 +9,15 @@ export class Game{
         this.nameOfContainer = nameOfContainer;
         this.makeGameArray();
         this.renderPlayingField();
-        // let end = false;
-        async () => {
         let id = 1;
-            for(let i = 0; i < 2; i++) {
-                console.log(i);
-                let piece = new Piece(id, "red", "blue", this.nameOfContainer, this);
-                id++;
-                i -= await piece.ltg;
-            }}
+        let piece
+        // while(true){
+            if (piece == null){
+                piece = new Piece(id, "red", "blue", this.nameOfContainer, this);
+                piece.ltg()
+                id++
+            }
+        // }
     }
 
 
