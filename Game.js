@@ -10,14 +10,8 @@ export class Game{
         this.makeGameArray();
         this.renderPlayingField();
         let id = 1;
-        let piece
-        // while(true){
-            if (piece == null){
-                piece = new Piece(id, "red", "blue", this.nameOfContainer, this);
-                piece.ltg()
-                id++
-            }
-        // }
+        let piece = new Piece(id, "red", "blue", this.nameOfContainer, this);
+        piece.ltg()
     }
 
 
@@ -26,7 +20,7 @@ export class Game{
         for(let i = 0; i < this.#height; i++){
             this.playingField[i]=[];
             for(let j = 0; j < this.#width; j++){
-                this.playingField[i][j] = null;
+                this.playingField[i][j] = [null, null];
             }
         }
     }
@@ -46,48 +40,41 @@ export class Game{
         }
     }
 
-    // starDestroyer(){
-    //     console.log(this.playingField)
-    //     let cont = document.getElementById(this.nameOfContainer);
-    //     for(let i = 0; i < this.#height; i++){
-    //         let last = null;
-    //         let counter = 0;
-    //         for(let j = 0; j < this.#witdh; j++){
-    //
-    //             if(this.playingField[i][j] != null){
-    //                 if(this.playingField[i][j] == last) counter++;
-    //                 else{
-    //                     last = this.playingField[i][j];
-    //                     counter = 0;
-    //                 }
-    //                 if (counter >= 3){
-    //                     for (let k = 0; k <= counter; k++){
-    //                         this.playingField[i][j - k] = null;
-    //                         cont.children[i].children[j - k].style.backgroundColor = "transparent";
-    //                     }
-    //                 }
-    //             }else counter = 0;
-    //         }
-    //     }
-    //     for(let j = 0; j < this.#witdh; j++){
-    //         let last = null;
-    //         let counter = 0;
-    //         for(let i = 0; i < this.#height; i++){
-    //             if(this.playingField[i][j] != null){
-    //                 if(this.playingField[i][j] == last) counter++;
-    //                 else{
-    //                     last = this.playingField[i][j];
-    //                     counter = 0;
-    //                 }
-    //                 if(counter >= 3){
-    //                     console.log("chat this is real")
-    //                     for (let k = 0; k <= counter; k++){
-    //                         this.playingField[i - k][j] = null;
-    //                         cont.children[i - k].children[j].style.backgroundColor = "transparent";
-    //                     }
-    //                 }
-    //             }else counter = 0;
-    //         }
-    //     }
-    // }
+    starDestroyer(){
+        let copy = [...this.playingField];
+        for(let i = 0; i < this.#height; i++){
+            let counter = 1;
+            for(let j = 1; j < this.#width; j++){
+                if(copy[i][j][0] !== null && copy[i][j][0] === copy[i][j - 1][0] ){
+                    counter++;
+                } else if(counter >= 4){
+                    for(let k = 0; k < counter; k++){
+                        copy[i][j - k - 1] = [null, null]
+                    }
+                }
+            }
+
+        }
+        for(let i = 0; i < this.#height; i++){
+            let cont = document.getElementById(this.nameOfContainer);
+            for(let j = 0; j < this.#width; j++){
+                if(copy[i][j][0] == null && this.playingField[i][j][0] != null){
+                    cont.children[i].children[j].style.backgroundColor = "transparent";
+                }
+            }
+        }
+    }
+
+    render(){
+        let cont = document.getElementById(this.nameOfContainer)
+        for(let i = 0; i < this.#height; i++){
+            for(let j = 0; j < this.#width; j++){
+                if(this.playingField[i][j][0] !== null){
+                    cont.children[i].children[j].style.backgroundColor = this.playingField[i][j][0];
+                }else{
+                    cont.children[i].children[j].style.backgroundColor = "transparent";
+                }
+            }
+        }
+    }
 }

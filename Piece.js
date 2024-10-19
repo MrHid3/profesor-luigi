@@ -18,46 +18,44 @@ export class Piece {
     }
 
     drawPiece(){
-        let cont = document.getElementById(this.nameOfContainer);
-        cont.children[this.y].children[this.x].style.backgroundColor = this.color1;
-        cont.children[this.y + this.rotationy].children[this.x + this.rotationx].style.backgroundColor = this.color2;
+        this.game.playingField[this.y][this.x] = [this.color1, this.id];
+        this.game.playingField[this.y + this.rotationy][this.x + this.rotationx] = [this.color2, this.id];
 
         // console.log("draw")
     }
 
     erasePiece(){
-        let cont = document.getElementById(this.nameOfContainer);
-        // this.playingField[y][x] = null;
-        // this.playingField[y + 1][x] = null;
-        cont.children[this.oldy].children[this.oldx].style.backgroundColor = "transparent"; /*console.log("ereased" + oldx + "/" + oldy);*/
-        cont.children[this.oldy + this.oldrotationy].children[this.oldx + this.oldrotationx].style.backgroundColor = "transparent"; /*console.log("erased" + (oldx + oldrotationx) + "/" + (oldy + oldrotationy))*/
+        this.game.playingField[this.oldy][this.oldx] = [null, null];
+        this.game.playingField[this.oldy + this.oldrotationy][this.oldx + this.oldrotationx] = [null, null]
 
-        // console.log("erase")
+        // console.log("erase", this.oldy, this.oldx)
     }
 
     ltg(){
         let falling = true;
+        let changed = false;
         document.addEventListener('keypress', (event) => {
             if(falling){
-                if(event.key == "d") { //prawo
-                    if (this.x != 7 &&
-                        this.x + this.rotationx != 7 &&
-                        this.game.playingField[this.y][this.x + 1] == null &&
-                        this.game.playingField[this.y][this.x + this.rotationx + 1] == null){
+                if(event.key === "d") { //prawo
+                    if (this.x !== 7
+                        && this.x + this.rotationx !== 7
+                        && this.game.playingField[this.y][this.x + (this.rotationx === 1? 2: 1)][0] === null
+                    ){
                         this.x += 1;
                         // console.log("prawo")
                     }
                 }
-                else if(event.key == "a") { //lewo
-                    if (this.x != 0 &&
-                        this.x + this.rotationx != 0 &&
-                        this.game.playingField[this.y][this.x-1] == null
-                        && this.game.playingField[this.y][this.x + this.rotationx - 1] == null){
+                else if(event.key === "a") { //lewo
+                    if (this.x !== 0
+                        && this.x + this.rotationx !== 0
+                        && this.game.playingField[this.y][this.x - (this.rotationx === -1? 2: 1)][0] === null
+                    ) {
                         this.x -= 1;
                         // console.log("lewo")
                     }
                 }
-                else if(event.key == "f") {
+                else if(event.key === "f"
+                    && !changed) {
                     switch(this.rotation){
                         case 0: // do góry
                             this.rotation = 1;
@@ -65,7 +63,9 @@ export class Piece {
                             this.rotationy = -1;
                             break;
                         case 1: // na lewo
-                            if(this.x != 7){
+                            if(this.x !== 0
+                                && this.game.playingField[this.y][this.x - 1][0] === null
+                            ){
                                 this.rotation = 2;
                                 this.rotationx = -1;
                                 this.rotationy = 0;
@@ -73,8 +73,8 @@ export class Piece {
                             }
                             break;
                         case 2: //w dół
-                            if(this.y != 15 &&
-                                this.game.playingField[this.y + 1][this.x] == null){
+                            if(this.y !== 15
+                                && this.game.playingField[this.y + 1 + (falling? 0: 1)][this.x][0] === null){
                                 this.rotation = 3;
                                 this.rotationx = 0;
                                 this.rotationy = 1;
@@ -82,44 +82,50 @@ export class Piece {
                             }
                             break;
                         case 3: // na prawo
-                            if(this.x != 0){
+                            if(this.x !== 7
+                                && this.game.playingField[this.y][this.x + 1][0] === null
+
+                            ){
                                 this.rotation = 0;
                                 this.rotationx = 1;
                                 this.rotationy = 0;
                             }
                             break;
                     }
+                    changed = true;
                 }
             }})
-            setInterval(() => {
-                if(falling){
-                    if(this.y == 15 ||
-                        this.y + this.rotationy == 15||
-                        this.game.playingField[this.y + this.rotationy + 1][this.x + this.rotationx] != null ||
-                        this.game.playingField[this.y+1][this.x] != null) {
-                        falling = false;
-                        // if(this.y == 1) this.end = true;                                                     NIGGA FAIL STATE
-                        this.erasePiece()
-                        // y += 1;
-                        this.drawPiece();
-                        this.game.playingField[this.y][this.x] = this.color1;
-                        this.game.playingField[this.y + this.rotationy][this.x + this.rotationx] = this.color2;
-                        // this.starDestroyer()                                                                 NIGGA STAR DESTROYER
-                        // console.log("koniec")
-                        let nowy = new Piece(this.id + 1, "yellow", "red", this.nameOfContainer, this.game);
-                        nowy.ltg();
-                    }else{
-                        this.erasePiece();
-                        this.y += 1;
-                        this.drawPiece();
-                        this.oldx = this.x;
-                        this.oldy = this.y;
-                        this.oldrotationx = this.rotationx;
-                        this.oldrotationy = this.rotationy;
-                        // console.log("normalne spadanie")
-                    }
+        setInterval(() => {
+            changed = false;
+            if(falling){
+                if(this.y === 15
+                    || this.y + this.rotationy === 15
+                    || this.game.playingField[this.y + (this.rotationy === 1? 2: 1)][this.x][0] !== null
+                    || this.game.playingField[this.y + (this.rotationy === 1? 2: 1)][this.x + this.rotationx][0] !== null
+                ) {
+                    falling = false;
+                    this.erasePiece()
+                    this.drawPiece();
+                    this.game.render()
+                    this.game.playingField[this.y][this.x] = [this.color1, this.id];
+                    this.game.playingField[this.y + this.rotationy][this.x + this.rotationx] = [this.color2, this.id];
+                    this.game.starDestroyer();
+                    let nowy = new Piece(this.id + 1, "yellow", "red", this.nameOfContainer, this.game);
+                    nowy.ltg();
+                }else{
+                    this.erasePiece();
+                    this.y += 1;
+                    this.drawPiece();
+                    this.game.render()
+                    this.oldx = this.x;
+                    this.oldy = this.y;
+                    this.oldrotationx = this.rotationx;
+                    this.oldrotationy = this.rotationy;
+                    console.log(this.rotation);
+                    // console.log("normalne spadanie")
                 }
-            }, 200)
+            }
+        }, 200)
 
     }
 }
