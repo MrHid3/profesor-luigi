@@ -1,7 +1,6 @@
 export class Piece {
-    constructor(id, color1, color2, nameOfContainer, game){
+    constructor(id, color1, color2, game){
         this.game = game;
-        this.nameOfContainer = nameOfContainer;
         this.id = id;
         this.x = 3;
         this.y = 1;
@@ -15,22 +14,24 @@ export class Piece {
         this.oldrotationy = this.rotationy;
         this.oldy = this.y;
         this.oldx = this.x;
+        let random = Math.floor(Math.random() * 3);
+        this.nextcolor1 = random === 0? "red" : random === 1? "yellow" : "blue"
+        random = Math.floor(Math.random() * 2);
+        this.nextcolor2 = random === 0? "red" : random === 1? "yellow" : "blue"
     }
 
     drawPiece(){
-        let cont = document.getElementById(this.nameOfContainer);
-        cont.children[this.y].children[this.x].style.backgroundColor = this.color1;
-        cont.children[this.y + this.rotationy].children[this.x + this.rotationx].style.backgroundColor = this.color2;
+        this.game.cont.children[this.y].children[this.x].style.backgroundColor = this.color1;
+        this.game.cont.children[this.y + this.rotationy].children[this.x + this.rotationx].style.backgroundColor = this.color2;
 
         // console.log("draw")
     }
 
     erasePiece(){
-        let cont = document.getElementById(this.nameOfContainer);
         // this.playingField[y][x] = null;
         // this.playingField[y + 1][x] = null;
-        cont.children[this.oldy].children[this.oldx].style.backgroundColor = "transparent"; /*console.log("ereased" + oldx + "/" + oldy);*/
-        cont.children[this.oldy + this.oldrotationy].children[this.oldx + this.oldrotationx].style.backgroundColor = "transparent"; /*console.log("erased" + (oldx + oldrotationx) + "/" + (oldy + oldrotationy))*/
+        this.game.cont.children[this.oldy].children[this.oldx].style.backgroundColor = "transparent"; /*console.log("ereased" + oldx + "/" + oldy);*/
+        this.game.cont.children[this.oldy + this.oldrotationy].children[this.oldx + this.oldrotationx].style.backgroundColor = "transparent"; /*console.log("erased" + (oldx + oldrotationx) + "/" + (oldy + oldrotationy))*/
 
         // console.log("erase")
     }
@@ -91,36 +92,47 @@ export class Piece {
                     }
                 }
             }})
+        let yes = true;
         setInterval(() => {
             if(falling){
-                if(this.y === 15
-                    || this.y + this.rotationy === 15
-                    || this.game.playingField[this.y + this.rotationy + 1][this.x + this.rotationx][0] !== null
-                    || this.game.playingField[this.y+1][this.x][0] !== null) {
-                    falling = false;
-                    // if(this.y == 1) this.end = true;                                                     NIGGA FAIL STATE
-                    this.erasePiece()
-                    // y += 1;
-                    this.drawPiece();
-                    this.game.playingField[this.y][this.x] = [this.color1, this.id];
-                    this.game.playingField[this.y + this.rotationy][this.x + this.rotationx] = [this.color2, this.id];
-                    this.game.starDestroyer();
-                    this.game.fajnieSiedze();
-                    // console.log("in the end")
-                    let nowy = new Piece(this.id + 1, "yellow", "red", this.nameOfContainer, this.game);
-                    nowy.ltg();
-                }else{
+                if(yes){
+                    yes = false;
+                    if(this.y === 15
+                        || this.y + this.rotationy === 15
+                        || this.game.playingField[this.y + this.rotationy + 1][this.x + this.rotationx][0] !== null
+                        || this.game.playingField[this.y+1][this.x][0] !== null) {
+                        falling = false;
+                        // if(this.y == 1) this.end = true;                                                     NIGGA FAIL STATE
+                        this.erasePiece()
+                        this.drawPiece();
+                        this.game.playingField[this.y][this.x] = [this.color1, this.id];
+                        this.game.playingField[this.y + this.rotationy][this.x + this.rotationx] = [this.color2, this.id];
+                        this.game.starDestroyer();
+                        this.game.fajnieSiedze();
+                        // console.log("in the end")
+                        let nowy = new Piece(this.id + 1, this.nextcolor1, this.nextcolor2, this.game);
+                        nowy.ltg();
+                    }else{
+                        this.game.fajnieSiedze();
+                        this.erasePiece();
+                        this.y += 1;
+                        this.drawPiece();
+                        this.oldx = this.x;
+                        this.oldy = this.y;
+                        this.oldrotationx = this.rotationx;
+                        this.oldrotationy = this.rotationy;
+                    }
+                } else {
                     this.erasePiece();
-                    this.y += 1;
                     this.drawPiece();
                     this.oldx = this.x;
                     this.oldy = this.y;
                     this.oldrotationx = this.rotationx;
                     this.oldrotationy = this.rotationy;
-                    this.game.fajnieSiedze();
+                    yes = true;
                 }
             }
-        }, 100)
+        }, 150)
 
     }
 }
