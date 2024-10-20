@@ -2,6 +2,25 @@
     box-sizing: border-box;
 }
 
+#preview{
+    width: 80px;
+    height: 50px;
+    margin: 20px auto;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    border-radius: 5px;
+    align-items: center;
+}
+
+#onepiece, #twopiece{
+    width: 30px;
+    height: 30px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: black;
+}
+
 #pf{
     width: 240px;
     margin: 0 auto;

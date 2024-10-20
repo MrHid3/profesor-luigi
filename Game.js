@@ -11,10 +11,12 @@ export class Game{
         this.renderPlayingField();
         this.makeGameArray();
         this.canplay = true;
+        this.points = 0;
         let id = 1;
         let piece
         let color1 = Math.floor(Math.random() * 3);
         let color2 = Math.floor(Math.random() * 3);
+        document.getElementById("top").textContent = (localStorage.getItem("top") === null ? "0": localStorage.getItem("top"));
         piece = new Piece(id,
             color1 === 0? "brown" :  color1 === 1? "yellow" : "blue",
             color2 === 0? "brown" :  color2 === 1? "yellow" : "blue",
@@ -25,7 +27,6 @@ export class Game{
     image(y, x){
         let tile = this.playingField[y][x];
         let field = this.cont.children[y].children[x];
-        let img;
         if(tile[0] === "blue"){
             if(tile[1] === 0){
                 field.style.backgroundImage = 'url("imges/covid_blue.png")'
@@ -115,7 +116,8 @@ export class Game{
                     } else {
                         if(counter >= 4) {
                             for (let k = 0; k < counter; k++) {
-                                this.playingField[i][j - k - 1] = [null, null, null]
+                                if(this.playingField[i][j - k - 1][1] === 0) this.points += 100;
+                                this.playingField[i][j - k - 1] = [null, null, null];
                             }
                             hasDestroyed = true;
                             counter = 1;
@@ -125,6 +127,7 @@ export class Game{
                     }
                 } else if(counter >= 4){
                     for(let k = 0; k < counter; k++){
+                        if(this.playingField[i][j - k - 1][1] === 0) this.points += 100;
                         this.playingField[i][j - k - 1] = [null, null, null]
                     }
                     hasDestroyed = true;
@@ -147,6 +150,7 @@ export class Game{
                     } else {
                         if (counter2 >= 4) {
                             for (let k = 0; k < counter2; k++) {
+                                if(this.playingField[i - k - 1][j][1] === 0) this.points += 100;
                                 this.playingField[i - k - 1][j] = [null, null, null]
                             }
                             counter2 = 1;
@@ -157,6 +161,7 @@ export class Game{
                     }
                 } else if (counter2 >= 4) {
                     for (let k = 0; k < counter2; k++) {
+                        if(this.playingField[i - k - 1][j][1] === 0) this.points += 100;
                         this.playingField[i - k - 1][j] = [null, null, null]
                     }
                     counter2 = 1;
@@ -201,7 +206,6 @@ export class Game{
             }
         }
         if(hasfallen) this.starDestroyer()
-        if(hasfallen) this.canplay = false;
-        else this.canplay = true;
+        this.canplay = !hasfallen;
     }
 }
