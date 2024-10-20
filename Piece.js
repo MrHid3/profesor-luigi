@@ -21,8 +21,41 @@ export class Piece {
     }
 
     drawPiece(){
-        this.game.cont.children[this.y].children[this.x].style.backgroundColor = this.color1
-        this.game.cont.children[this.y + this.rotationy].children[this.x + this.rotationx].style.backgroundColor = this.color2
+        if(this.color1 === "blue"){
+            if(this.rotation === 0) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/bl_left.png")'
+            else if(this.rotation === 2) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/bl_right.png")'
+            else if(this.rotation === 3) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/bl_up.png")'
+            else if(this.rotation === 1) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/bl_down.png")'
+        }else if(this.color1 === "brown"){
+            if(this.rotation === 0) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/br_left.png")'
+            else if(this.rotation === 2) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/br_right.png")'
+            else if(this.rotation === 3) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/br_up.png")'
+            else if(this.rotation === 1) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/br_down.png")'
+        }else if(this.color1 === "yellow"){
+            if(this.rotation === 0) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/yl_left.png")'
+            else if(this.rotation === 2) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/yl_right.png")'
+            else if(this.rotation === 3) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/yl_up.png")'
+            else if(this.rotation === 1) this.game.cont.children[this.y].children[this.x].style.backgroundImage = 'url("imges/yl_down.png")'
+        }
+        if(this.rotation === 0){
+            if(this.color2 === "blue") this.game.cont.children[this.y].children[this.x + 1].style.backgroundImage = 'url("imges/bl_right.png")'
+            else if(this.color2 === "brown") this.game.cont.children[this.y].children[this.x + 1].style.backgroundImage = 'url("imges/br_right.png")'
+            else this.game.cont.children[this.y].children[this.x + 1].style.backgroundImage = 'url("imges/yl_right.png")'
+        }else if(this.rotation === 2) {
+            if(this.color2 === "blue") this.game.cont.children[this.y].children[this.x - 1].style.backgroundImage = 'url("imges/bl_left.png")'
+            else if(this.color2 === "brown") this.game.cont.children[this.y].children[this.x - 1].style.backgroundImage = 'url("imges/br_left.png")'
+            else this.game.cont.children[this.y].children[this.x - 1].style.backgroundImage = 'url("imges/yl_left.png")'
+        }else if(this.rotation === 3) {
+            if(this.color2 === "blue") this.game.cont.children[this.y + 1].children[this.x].style.backgroundImage = 'url("imges/bl_down.png")'
+            else if(this.color2 === "brown") this.game.cont.children[this.y + 1].children[this.x].style.backgroundImage = 'url("imges/br_down.png")'
+            else this.game.cont.children[this.y + 1].children[this.x].style.backgroundImage = 'url("imges/yl_down.png")'
+        }else if(this.rotation === 1) {
+            if(this.color2 === "blue") this.game.cont.children[this.y - 1].children[this.x].style.backgroundImage = 'url("imges/bl_up.png")'
+            else if(this.color2 === "brown") this.game.cont.children[this.y - 1].children[this.x].style.backgroundImage = 'url("imges/br_up.png")'
+            else this.game.cont.children[this.y - 1].children[this.x].style.backgroundImage = 'url("imges/yl_up.png")'
+        }
+        // this.game.cont.children[this.y].children[this.x].style.backgroundColor = this.color1
+        // this.game.cont.children[this.y + this.rotationy].children[this.x + this.rotationx].style.backgroundColor = this.color2
 
         // console.log("draw")
     }
@@ -30,8 +63,8 @@ export class Piece {
     erasePiece(){
         // this.playingField[y][x] = null;
         // this.playingField[y + 1][x] = null;
-        this.game.cont.children[this.oldy].children[this.oldx].style.backgroundColor = "transparent"; /*console.log("ereased" + oldx + "/" + oldy);*/
-        this.game.cont.children[this.oldy + this.oldrotationy].children[this.oldx + this.oldrotationx].style.backgroundColor = "transparent" /*console.log("erased" + (oldx + oldrotationx) + "/" + (oldy + oldrotationy))*/
+        this.game.cont.children[this.oldy].children[this.oldx].style.backgroundImage = "none"; /*console.log("ereased" + oldx + "/" + oldy);*/
+        this.game.cont.children[this.oldy + this.oldrotationy].children[this.oldx + this.oldrotationx].style.backgroundImage = "none" /*console.log("erased" + (oldx + oldrotationx) + "/" + (oldy + oldrotationy))*/
 
         // console.log("erase")
     }
@@ -42,7 +75,7 @@ export class Piece {
         let started = false;
         this.drawPiece();
         document.addEventListener('keypress', (event) => {
-            if(falling && started){
+            if(falling && started && this.game.canplay){
                 if(event.key === "d") { //prawo
                     if (this.x !== 7
                         && this.x + this.rotationx !== 7 &&
@@ -116,7 +149,7 @@ export class Piece {
                     this.game.fajnieSiedze();
                     started = true;
                 }
-                if(yes % 5 === 0){
+                if(yes % 5 === 0 && this.game.canplay){
                     yes++;
                     if(this.y === 15
                         || this.y + this.rotationy === 15

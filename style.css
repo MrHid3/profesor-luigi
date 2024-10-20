@@ -5,14 +5,14 @@
 #pf{
     width: 240px;
     margin: 0 auto;
+    background-color: black;
 }
 
 .piece{
-    border: solid 1px;
     width: 30px;
     height: 30px;
     float: left;
-    color: brown;
     background-repeat: no-repeat;
     background-size: cover;
+    background-color: black;
 }
