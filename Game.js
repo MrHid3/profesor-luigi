@@ -12,11 +12,12 @@ export class Game{
         this.makeGameArray();
         this.canplay = true;
         this.points = 0;
+        this.playing = true;
         let id = 1;
         let piece
         let color1 = Math.floor(Math.random() * 3);
         let color2 = Math.floor(Math.random() * 3);
-        document.getElementById("top").textContent = (localStorage.getItem("top") === null ? "0": localStorage.getItem("top"));
+        document.getElementById("top").textContent = (localStorage.getItem("top") === null ? "TOP: 0": `TOP: ${localStorage.getItem("top")}`);
         piece = new Piece(id,
             color1 === 0? "brown" :  color1 === 1? "yellow" : "blue",
             color2 === 0? "brown" :  color2 === 1? "yellow" : "blue",
@@ -28,47 +29,26 @@ export class Game{
         let tile = this.playingField[y][x];
         let field = this.cont.children[y].children[x];
         if(tile[0] === "blue"){
-            if(tile[1] === 0){
-                field.style.backgroundImage = 'url("imges/covid_blue.png")'
-            }else if(x !== 7 && this.playingField[y][x + 1][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/bl_left.png")'
-            }else if(x !== 0 && this.playingField[y][x - 1][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/bl_right.png")'
-            }else if(y !== 15 && this.playingField[y + 1][x][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/bl_up.png")'
-            }else if(y !== 7 && this.playingField[y - 1][x][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/bl_down.png")'
-            }else{
-                field.style.backgroundImage = 'url("imges/bl_dot.png")'
-            }
+            if(tile[1] === 0)field.style.backgroundImage = 'url("imges/covid_blue.png")'
+            else if(x !== 7 && this.playingField[y][x + 1][1] === tile[1]) field.style.backgroundImage = 'url("imges/bl_left.png")'
+            else if(x !== 0 && this.playingField[y][x - 1][1] === tile[1]) field.style.backgroundImage = 'url("imges/bl_right.png")'
+            else if(y !== 15 && this.playingField[y + 1][x][1] === tile[1]) field.style.backgroundImage = 'url("imges/bl_up.png")'
+            else if(y !== 7 && this.playingField[y - 1][x][1] === tile[1]) field.style.backgroundImage = 'url("imges/bl_down.png")'
+            else field.style.backgroundImage = 'url("imges/bl_dot.png")'
         }else if(tile[0] === "brown"){
-            if(tile[1] === 0){
-                field.style.backgroundImage = 'url("imges/covid_brown.png")'
-            }else if(x !== 7 && this.playingField[y][x + 1][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/br_left.png")'
-            }else if(x !== 0 && this.playingField[y][x - 1][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/br_right.png")'
-            }else if(y !== 15 && this.playingField[y + 1][x][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/br_up.png")'
-            }else if(y !== 0 && this.playingField[y - 1][x][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/br_down.png")'
-            }else{
-                field.style.backgroundImage = 'url("imges/br_dot.png")'
-            }
+            if(tile[1] === 0)field.style.backgroundImage = 'url("imges/covid_brown.png")'
+            else if(x !== 7 && this.playingField[y][x + 1][1] === tile[1]) field.style.backgroundImage = 'url("imges/br_left.png")'
+            else if(x !== 0 && this.playingField[y][x - 1][1] === tile[1]) field.style.backgroundImage = 'url("imges/br_right.png")'
+            else if(y !== 15 && this.playingField[y + 1][x][1] === tile[1]) field.style.backgroundImage = 'url("imges/br_up.png")'
+            else if(y !== 0 && this.playingField[y - 1][x][1] === tile[1]) field.style.backgroundImage = 'url("imges/br_down.png")'
+            else field.style.backgroundImage = 'url("imges/br_dot.png")'
         }else if(tile[0] === "yellow"){
-            if(tile[1] === 0){
-                field.style.backgroundImage = 'url("imges/covid_yellow.png")'
-            }else if(x !== 7 && this.playingField[y][x + 1][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/yl_left.png")'
-            }else if(x !== 0 && this.playingField[y][x - 1][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/yl_right.png")'
-            }else if(y !== 15 && this.playingField[y + 1][x][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/yl_up.png")'
-            }else if(y !== 7 && this.playingField[y - 1][x][1] === tile[1]) {
-                field.style.backgroundImage = 'url("imges/yl_down.png")'
-            }else{
-                field.style.backgroundImage = 'url("imges/yl_dot.png")'
-            }
+            if(tile[1] === 0)field.style.backgroundImage = 'url("imges/covid_yellow.png")'
+            else if(x !== 7 && this.playingField[y][x + 1][1] === tile[1]) field.style.backgroundImage = 'url("imges/yl_left.png")'
+            else if(x !== 0 && this.playingField[y][x - 1][1] === tile[1]) field.style.backgroundImage = 'url("imges/yl_right.png")'
+            else if(y !== 15 && this.playingField[y + 1][x][1] === tile[1]) field.style.backgroundImage = 'url("imges/yl_up.png")'
+            else if(y !== 7 && this.playingField[y - 1][x][1] === tile[1]) field.style.backgroundImage = 'url("imges/yl_down.png")'
+            else field.style.backgroundImage = 'url("imges/yl_dot.png")'
         }else{
             field.style.backgroundImage = "none";
         }
@@ -83,10 +63,13 @@ export class Game{
         }
         for(let i = 0; i < this.numberOfViruses; i++){
             let x = Math.floor(Math.random() * 8);
-            let y = Math.floor(Math.random() * 8) + 7;
+            let y = Math.floor(Math.random() * 8) + 8;
+            while(this.playingField[y][x][0] !== null){
+                x = Math.floor(Math.random() * 8);
+                y = Math.floor(Math.random() * 8) + 8;
+            }
             this.playingField[y][x][0] = (i % 3 === 0? "brown": i % 3 === 1? "yellow": "blue");
             this.playingField[y][x][1] = 0;
-            // this.cont.children[y].children[x].style.backgroundColor = this.playingField[y][x][0];
         }
     }
 
@@ -116,7 +99,10 @@ export class Game{
                     } else {
                         if(counter >= 4) {
                             for (let k = 0; k < counter; k++) {
-                                if(this.playingField[i][j - k - 1][1] === 0) this.points += 100;
+                                if(this.playingField[i][j - k - 1][1] === 0) {
+                                    this.points += 100;
+                                    this.playingField[i - k - 1][j] = [null, null, null]
+                                }
                                 this.playingField[i][j - k - 1] = [null, null, null];
                             }
                             hasDestroyed = true;
@@ -127,7 +113,10 @@ export class Game{
                     }
                 } else if(counter >= 4){
                     for(let k = 0; k < counter; k++){
-                        if(this.playingField[i][j - k - 1][1] === 0) this.points += 100;
+                        if(this.playingField[i][j - k - 1][1] === 0){
+                            this.points += 100;
+                            this.playingField[i - k - 1][j] = [null, null, null]
+                        }
                         this.playingField[i][j - k - 1] = [null, null, null]
                     }
                     hasDestroyed = true;
@@ -150,18 +139,24 @@ export class Game{
                     } else {
                         if (counter2 >= 4) {
                             for (let k = 0; k < counter2; k++) {
-                                if(this.playingField[i - k - 1][j][1] === 0) this.points += 100;
-                                this.playingField[i - k - 1][j] = [null, null, null]
+                                if(this.playingField[i - k - 1][j][1] === 0) {
+                                    this.points += 100;
+                                    this.playingField[i - k - 1][j] = [null, null, null]
+                                    }
+                                this.playingField[i - k - 1][j] = [null, null, null];
                             }
                             counter2 = 1;
                             hasDestroyed = true;
-                        }else {
+                        }else{
                             counter2 = 1;
                         }
                     }
                 } else if (counter2 >= 4) {
                     for (let k = 0; k < counter2; k++) {
-                        if(this.playingField[i - k - 1][j][1] === 0) this.points += 100;
+                        if(this.playingField[i - k - 1][j][1] === 0){
+                            this.points += 100;
+                            this.numberOfViruses--;
+                        }
                         this.playingField[i - k - 1][j] = [null, null, null]
                     }
                     counter2 = 1;
@@ -169,6 +164,10 @@ export class Game{
                 }
             } if (counter2 >= 4) {
                 for (let k = 0; k < counter2; k++) {
+                    if(this.playingField[15 - k - 1][j][1] === 0) {
+                        this.points += 100;
+                        this.numberOfViruses--;
+                    }
                     this.playingField[15 - k][j] = [null, null, null]
                 }
                 hasDestroyed = true
@@ -196,7 +195,6 @@ export class Game{
                             && ((j !== 7 && !(this.playingField[i][j][1] === this.playingField[i][j + 1][1] && this.playingField[i + 1][j + 1][0] !== null)) || (j === 7))
                             && ((j !== 0 && !(this.playingField[i][j][1] === this.playingField[i][j - 1][1] && this.playingField[i + 1][j - 1][0] !== null)) || (j === 0))){
                             this.cont.children[i].children[j].style.backgroundColor = "black";
-                            // this.cont.children[i + 1].children[j].style.backgroundColor = this.playingField[i][j][0];
                             this.playingField[i + 1][j] = [...this.playingField[i][j]];
                             this.playingField[i][j] = [null, null, null];
                             hasfallen = true;

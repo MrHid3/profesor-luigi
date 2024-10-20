@@ -4,7 +4,6 @@ export class Piece {
         this.id = id;
         this.x = 3;
         this.y = 0;
-        // let falling = true;
         this.color1 = color1;
         this.color2 = color2;
         this.rotation = 0;
@@ -19,7 +18,7 @@ export class Piece {
         random = Math.floor(Math.random() * 3);
         this.nextcolor2 = random === 0? "brown" : random === 1? "yellow" : "blue";
         document.getElementById("onepiece").style.backgroundImage = this.nextcolor1 === "brown" ? 'url("imges/br_left.png")': this.nextcolor1 === "yellow" ? 'url("imges/yl_left.png")' : 'url("imges/bl_left.png")';
-        document.getElementById("twopiece").style.backgroundImage = this.nextcolor2 === "brown" ? 'url("imges/br_right.png")': this.nextcolor1 === "yellow" ? 'url("imges/yl_right.png")' : 'url("imges/bl_right.png")';
+        document.getElementById("twopiece").style.backgroundImage = this.nextcolor2 === "brown" ? 'url("imges/br_right.png")': this.nextcolor2 === "yellow" ? 'url("imges/yl_right.png")' : 'url("imges/bl_right.png")';
     }
 
     drawPiece(){
@@ -56,19 +55,11 @@ export class Piece {
             else if(this.color2 === "brown") this.game.cont.children[this.y - 1].children[this.x].style.backgroundImage = 'url("imges/br_up.png")'
             else this.game.cont.children[this.y - 1].children[this.x].style.backgroundImage = 'url("imges/yl_up.png")'
         }
-        // this.game.cont.children[this.y].children[this.x].style.backgroundColor = this.color1
-        // this.game.cont.children[this.y + this.rotationy].children[this.x + this.rotationx].style.backgroundColor = this.color2
-
-        // console.log("draw")
     }
 
     erasePiece(){
-        // this.playingField[y][x] = null;
-        // this.playingField[y + 1][x] = null;
         this.game.cont.children[this.oldy].children[this.oldx].style.backgroundImage = "none"; /*console.log("ereased" + oldx + "/" + oldy);*/
         this.game.cont.children[this.oldy + this.oldrotationy].children[this.oldx + this.oldrotationx].style.backgroundImage = "none" /*console.log("erased" + (oldx + oldrotationx) + "/" + (oldy + oldrotationy))*/
-
-        // console.log("erase")
     }
 
     ltg(){
@@ -77,27 +68,8 @@ export class Piece {
         let started = false;
         this.drawPiece();
         document.addEventListener('keydown', (event) => {
-            console.log(event.key)
             if(falling && started && this.game.canplay){
-                if(event.key === "d" || event.key === "ArrowRight") { //prawo
-                    if (this.x !== 7
-                        && this.x + this.rotationx !== 7 &&
-                        this.game.playingField[this.y][this.x + 1][0] === null &&
-                        this.game.playingField[this.y][this.x + this.rotationx + 1][0] === null){
-                        this.x += 1;
-                        // console.log("prawo")
-                    }
-                }
-                else if(event.key === "a" || event.key === "ArrowLeft") { //lewo
-                    if (this.x !== 0
-                        && this.x + this.rotationx !== 0
-                        && this.game.playingField[this.y][this.x-1][0] === null
-                        && this.game.playingField[this.y][this.x + this.rotationx - 1][0] === null){
-                        this.x -= 1;
-                        // console.log("lewo")
-                    }
-                }
-                else if(event.key === "s" || event.key === "ArrowRight"){
+                if(event.key === "s" || event.key === "ArrowRight"){
                     if(!(this.y === 15
                         || this.y + this.rotationy === 15
                         || this.game.playingField[this.y + this.rotationy + 1][this.x + this.rotationx][0] !== null
@@ -106,8 +78,21 @@ export class Piece {
                     )){
                         this.y += 1;
                     }
-                }
-                else if(event.key === "w" || event.key === "ArrowUp") {
+                } else if(event.key === "d" || event.key === "ArrowRight") { //prawo
+                    if (this.x !== 7
+                        && this.x + this.rotationx !== 7 &&
+                        this.game.playingField[this.y][this.x + 1][0] === null &&
+                        this.game.playingField[this.y][this.x + this.rotationx + 1][0] === null){
+                        this.x += 1;
+                    }
+                } else if(event.key === "a" || event.key === "ArrowLeft") { //lewo
+                    if (this.x !== 0
+                        && this.x + this.rotationx !== 0
+                        && this.game.playingField[this.y][this.x-1][0] === null
+                        && this.game.playingField[this.y][this.x + this.rotationx - 1][0] === null){
+                        this.x -= 1;
+                    }
+                } else if(event.key === "w" || event.key === "ArrowUp") {
                     switch(this.rotation){
                         case 0: // do góry
                             this.rotation = 1;
@@ -146,47 +131,48 @@ export class Piece {
                 } else if(event.key === "Shift"){
                     switch(this.rotation){
                         case 0: // do góry
-                            if(this.x !== 7
-                                && this.game.playingField[this.y][this.x + 1][0] === null) {
-                                this.rotation = 3;
-                                this.rotationx = -1;
-                                this.rotationy = 0;
-                                this.x += 1;
-                            }
+                            this.rotation = 1;
+                            this.rotationx = 0;
+                            this.rotationy = -1;
                             break;
-                        case 1: // na lewo
-                            if(this.y !== 15
-                                && this.game.playingField[this.y + 1][this.x][0] === null) {
-                                this.rotation = 0;
-                                this.rotationx = 0;
-                                this.rotationy = 1;
-                                this.x -= 1;
-                            }
-                            break;
-                        case 2: //w dół
+                        case 1:
                             if(this.x !== 0
-                                && this.game.playingField[this.y][this.x + 1][0] === null){
-                                this.rotation = 1;
+                                && this.game.playingField[this.y][this.x + 1][0] === null
+                            ){
+                                this.rotation = 0;
                                 this.rotationx = 1;
                                 this.rotationy = 0;
                             }
                             break;
-                        case 3: // na prawo
-                            this.rotation = 2;
+                        case 2:
+                            this.rotation = 1;
                             this.rotationx = 0;
                             this.rotationy = -1;
+                            break;
+                        case 3:
+                            if(this.x !== 7
+                                && this.game.playingField[this.y][this.x + 1][0] === null
+                            ){
+                                this.rotation = 2;
+                                this.rotationx = -1;
+                                this.rotationy = 0;
+                                this.x += 1;
+                            }
                             break;
                     }
                 }
             }})
 
         setInterval(() => {
-            if(falling){
+            yes++
+            if(this.game.numberOfViruses === 0) this.game.playing = false;
+            if(!this.game.playing) document.getElementById("gameover").style.opacity = "100";
+            if(falling && this.game.playing){
                 if(yes % 2 === 0) {
                     this.game.fajnieSiedze();
-                    document.getElementById("current").textContent = this.game.points;
+                    document.getElementById("current").textContent = `CURRENT: ${this.game.points}`;
                     if(this.game.points > document.getElementById("top").textContent) {
-                        document.getElementById("top").textContent = this.game.points;
+                        document.getElementById("top").textContent = `TOP: ${this.game.points}`;
                         localStorage.setItem("top", this.game.points);
                     }
                     started = true;
@@ -197,17 +183,18 @@ export class Piece {
                         || this.y + this.rotationy === 15
                         || this.game.playingField[this.y + this.rotationy + 1][this.x + this.rotationx][0] !== null
                         || this.game.playingField[this.y+1][this.x][0] !== null) {
-                        falling = false;
-                        // if(this.y == 1) this.end = true;                                                     NIGGA FAIL STATE
-                        this.erasePiece()
-                        this.drawPiece();
-                        this.game.playingField[this.y][this.x] = [this.color1, this.id, this.rotation];
-                        this.game.playingField[this.y + this.rotationy][this.x + this.rotationx] = [this.color2, this.id, (this.rotation !== 2 && this.rotation !== 0? -this.rotation + 4: -this.rotation + 2)];
-                        this.game.starDestroyer();
-
-                        // console.log("in the end")
-                        let nowy = new Piece(this.id + 1, this.nextcolor1, this.nextcolor2, this.game);
-                        nowy.ltg();
+                        if(this.y === 0) {
+                            this.game.playing = false
+                        } else {
+                            falling = false;
+                            this.erasePiece()
+                            this.drawPiece();
+                            this.game.playingField[this.y][this.x] = [this.color1, this.id, this.rotation];
+                            this.game.playingField[this.y + this.rotationy][this.x + this.rotationx] = [this.color2, this.id, (this.rotation !== 2 && this.rotation !== 0 ? -this.rotation + 4 : -this.rotation + 2)];
+                            this.game.starDestroyer();
+                            let nowy = new Piece(this.id + 1, this.nextcolor1, this.nextcolor2, this.game);
+                            nowy.ltg();
+                        }
                     }else{
                         this.erasePiece();
                         this.y += 1;
@@ -225,7 +212,6 @@ export class Piece {
                     this.oldy = this.y;
                     this.oldrotationx = this.rotationx;
                     this.oldrotationy = this.rotationy;
-                    yes++
                 }
             }
         }, 60)

@@ -1,5 +1,12 @@
 *{
     box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body{
+    background-color: black;
+    height: 100vh;
+    width: 100vw;
 }
 
 #preview{
@@ -25,6 +32,8 @@
     width: 240px;
     margin: 0 auto;
     background-color: black;
+    outline: 2px solid white;
+    height: 480px;
 }
 
 .piece{
@@ -34,4 +43,21 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-color: black;
+}
+
+#gameover{
+    font-size: 120px;
+    height: 120px;
+    width: 600px;
+    color: white;
+    position: absolute;
+    left: calc(50% - 300px);
+    top: calc(50% - 240px);
+    text-align: center;
+    opacity: 0;
+}
+
+#top, #points{
+    text-align: center;
+    color: white;
 }
