@@ -42,7 +42,7 @@ body{
     float: left;
     background-repeat: no-repeat;
     background-size: cover;
-    background-color: black;
+    background-image: none;
 }
 
 #gameover{
