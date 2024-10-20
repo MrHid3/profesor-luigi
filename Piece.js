@@ -3,7 +3,7 @@ export class Piece {
         this.game = game;
         this.id = id;
         this.x = 3;
-        this.y = 1;
+        this.y = 0;
         // let falling = true;
         this.color1 = color1;
         this.color2 = color2;
@@ -15,14 +15,14 @@ export class Piece {
         this.oldy = this.y;
         this.oldx = this.x;
         let random = Math.floor(Math.random() * 3);
-        this.nextcolor1 = random === 0? "red" : random === 1? "yellow" : "blue"
+        this.nextcolor1 = random === 0? "brown" : random === 1? "yellow" : "blue"
         random = Math.floor(Math.random() * 2);
-        this.nextcolor2 = random === 0? "red" : random === 1? "yellow" : "blue"
+        this.nextcolor2 = random === 0? "brown" : random === 1? "yellow" : "blue"
     }
 
     drawPiece(){
-        this.game.cont.children[this.y].children[this.x].style.backgroundColor = this.color1;
-        this.game.cont.children[this.y + this.rotationy].children[this.x + this.rotationx].style.backgroundColor = this.color2;
+        this.game.cont.children[this.y].children[this.x].style.backgroundColor = this.color1
+        this.game.cont.children[this.y + this.rotationy].children[this.x + this.rotationx].style.backgroundColor = this.color2
 
         // console.log("draw")
     }
@@ -31,15 +31,18 @@ export class Piece {
         // this.playingField[y][x] = null;
         // this.playingField[y + 1][x] = null;
         this.game.cont.children[this.oldy].children[this.oldx].style.backgroundColor = "transparent"; /*console.log("ereased" + oldx + "/" + oldy);*/
-        this.game.cont.children[this.oldy + this.oldrotationy].children[this.oldx + this.oldrotationx].style.backgroundColor = "transparent"; /*console.log("erased" + (oldx + oldrotationx) + "/" + (oldy + oldrotationy))*/
+        this.game.cont.children[this.oldy + this.oldrotationy].children[this.oldx + this.oldrotationx].style.backgroundColor = "transparent" /*console.log("erased" + (oldx + oldrotationx) + "/" + (oldy + oldrotationy))*/
 
         // console.log("erase")
     }
 
     ltg(){
         let falling = true;
+        let yes = 0
+        let started = false;
+        this.drawPiece();
         document.addEventListener('keypress', (event) => {
-            if(falling){
+            if(falling && started){
                 if(event.key === "d") { //prawo
                     if (this.x !== 7
                         && this.x + this.rotationx !== 7 &&
@@ -58,6 +61,16 @@ export class Piece {
                         // console.log("lewo")
                     }
                 }
+                else if(event.key === "s"){
+                    if(!(this.y === 15
+                        || this.y + this.rotationy === 15
+                        || this.game.playingField[this.y + this.rotationy + 1][this.x + this.rotationx][0] !== null
+                        || this.game.playingField[this.y+1][this.x][0] !== null
+                        || yes % 5 === 0
+                    )){
+                        this.y += 1;
+                    }
+                }
                 else if(event.key === "f") {
                     switch(this.rotation){
                         case 0: // do góry
@@ -66,7 +79,9 @@ export class Piece {
                             this.rotationy = -1;
                             break;
                         case 1: // na lewo
-                            if(this.x !== 7){
+                            if(this.x !== 7
+                                && this.game.playingField[this.y][this.x + 1][0] === null
+                            ){
                                 this.rotation = 2;
                                 this.rotationx = -1;
                                 this.rotationy = 0;
@@ -83,7 +98,9 @@ export class Piece {
                             }
                             break;
                         case 3: // na prawo
-                            if(this.x !== 0){
+                            if(this.x !== 0
+                                && this.game.playingField[this.y][this.x + 1][0] === null
+                            ){
                                 this.rotation = 0;
                                 this.rotationx = 1;
                                 this.rotationy = 0;
@@ -92,11 +109,15 @@ export class Piece {
                     }
                 }
             }})
-        let yes = true;
+
         setInterval(() => {
             if(falling){
-                if(yes){
-                    yes = false;
+                if(yes % 2 === 0) {
+                    this.game.fajnieSiedze();
+                    started = true;
+                }
+                if(yes % 5 === 0){
+                    yes++;
                     if(this.y === 15
                         || this.y + this.rotationy === 15
                         || this.game.playingField[this.y + this.rotationy + 1][this.x + this.rotationx][0] !== null
@@ -105,18 +126,18 @@ export class Piece {
                         // if(this.y == 1) this.end = true;                                                     NIGGA FAIL STATE
                         this.erasePiece()
                         this.drawPiece();
-                        this.game.playingField[this.y][this.x] = [this.color1, this.id];
-                        this.game.playingField[this.y + this.rotationy][this.x + this.rotationx] = [this.color2, this.id];
+                        this.game.playingField[this.y][this.x] = [this.color1, this.id, this.rotation];
+                        this.game.playingField[this.y + this.rotationy][this.x + this.rotationx] = [this.color2, this.id, (this.rotation !== 2 && this.rotation !== 0? -this.rotation + 4: -this.rotation + 2)];
                         this.game.starDestroyer();
-                        this.game.fajnieSiedze();
+
                         // console.log("in the end")
                         let nowy = new Piece(this.id + 1, this.nextcolor1, this.nextcolor2, this.game);
                         nowy.ltg();
                     }else{
-                        this.game.fajnieSiedze();
                         this.erasePiece();
                         this.y += 1;
                         this.drawPiece();
+                        this.game.fajnieSiedze();
                         this.oldx = this.x;
                         this.oldy = this.y;
                         this.oldrotationx = this.rotationx;
@@ -129,10 +150,10 @@ export class Piece {
                     this.oldy = this.y;
                     this.oldrotationx = this.rotationx;
                     this.oldrotationy = this.rotationy;
-                    yes = true;
+                    yes++
                 }
             }
-        }, 150)
+        }, 60)
 
     }
 }
