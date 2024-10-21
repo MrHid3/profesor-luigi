@@ -162,7 +162,7 @@ export class Game{
                 } else counter2 = 1;
             } if (counter2 >= 4) {
                 for (let k = 0; k < counter2; k++) {
-                    if(copy2[15 - k - 1][j][1] === 0 && copy2[15 - k - 1][j][1] !== -1 && copy2[15 - k - 1][j][1] !== -2) {
+                    if(copy2[15 - k][j][1] === 0 && copy2[15 - k - 1][j][1] !== -1 && copy2[15 - k - 1][j][1] !== -2) {
                         copy2[15 - k][j][1] = -2;
                     }else
                         copy2[15 - k][j][1] = -1;
