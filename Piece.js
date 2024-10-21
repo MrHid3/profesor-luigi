@@ -69,7 +69,7 @@ export class Piece {
         this.drawPiece();
         document.addEventListener('keydown', (event) => {
             if(falling && started && this.game.canplay){
-                if(event.key === "s" || event.key === "ArrowRight"){
+                if(event.key === "s" || event.key === "ArrowDown"){
                     if(!(this.y === 15
                         || this.y + this.rotationy === 15
                         || this.game.playingField[this.y + this.rotationy + 1][this.x + this.rotationx][0] !== null
